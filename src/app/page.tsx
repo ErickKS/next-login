@@ -5,13 +5,12 @@ import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { Mail, LockKeyhole } from "lucide-react";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { FirebaseError } from "firebase/app";
-import { auth } from "@/utils/firebase";
+import { signInWithCredentials, signInWithGoogle } from "@/utils/firebase";
 
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { Toast } from "@/components/toast";
+import result from "postcss/lib/result";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -47,24 +46,33 @@ export default function Home() {
     return !(!email || !password);
   }
 
-  async function handleSignIn() {
-    const isValidValues = validations();
+  async function handleSignIn(mode: "credentials" | "google") {
+    if (mode === "credentials") {
+      const isValidValues = validations();
 
-    console.log(isValidValues);
-    if (!isValidValues) return;
+      if (!isValidValues) return;
 
-    try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        const { code } = error;
+      const result = await signInWithCredentials(email, password);
 
-        if (code === "auth/invalid-login-credentials" || "auth/email-already-in-use") handleToast();
+      if (result === "success") {
+        alert("sucesso");
+      } else {
+        handleToast();
+        return;
+      }
+    }
+
+    if (mode === "google") {
+      const result = await signInWithGoogle();
+
+      if (result === "success") {
+        alert("sucesso");
+      } else {
+        handleToast();
+        return;
       }
     }
   }
-
-  function handleSignInWithGoogle() {}
 
   return (
     <>
@@ -91,7 +99,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <Button variant="primary" onClick={handleSignIn}>
+            <Button variant="primary" onClick={() => handleSignIn("credentials")}>
               Login
             </Button>
 
@@ -101,7 +109,7 @@ export default function Home() {
               <div className="flex-1 h-[1px] bg-[#4A494A]" />
             </div>
 
-            <Button variant="secondary" onClick={handleSignInWithGoogle}>
+            <Button variant="secondary" onClick={() => handleSignIn("google")}>
               <Image src={"/google.svg"} alt="" height={24} width={24} />
               Sing In with Google
             </Button>

@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { FirebaseError, initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBukKzGDJZafVBk0j4dJo1N0jKPub76RBA",
@@ -11,5 +11,40 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 export const auth = getAuth(app);
+
+// EMAIL & PASSWORD
+
+export async function signInWithCredentials(email: string, password: string) {
+  try {
+    const response = await signInWithEmailAndPassword(auth, email, password);
+    console.log(response);
+
+    return "success";
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      const { code } = error;
+      console.log(code);
+    }
+  }
+}
+
+// GOOGLE
+
+const provider = new GoogleAuthProvider();
+
+export async function signInWithGoogle() {
+  try {
+    const response = await signInWithPopup(auth, provider);
+    console.log(response);
+
+    return "success";
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      const { code } = error;
+      console.log(code);
+
+      return "error";
+    }
+  }
+}
