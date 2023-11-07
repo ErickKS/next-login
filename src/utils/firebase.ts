@@ -1,5 +1,5 @@
 import { FirebaseError, initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBukKzGDJZafVBk0j4dJo1N0jKPub76RBA",
@@ -25,6 +25,24 @@ export async function signInWithCredentials(email: string, password: string) {
     if (error instanceof FirebaseError) {
       const { code } = error;
       console.log(code);
+
+      return "error";
+    }
+  }
+}
+
+export async function signUpWithCredentials(email: string, password: string) {
+  try {
+    const response = await createUserWithEmailAndPassword(auth, email, password);
+    console.log(response);
+
+    return "success";
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      const { code } = error;
+      console.log(code);
+
+      return "error";
     }
   }
 }

@@ -5,14 +5,14 @@ import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import { Mail, LockKeyhole } from "lucide-react";
 
-import { signInWithCredentials } from "@/utils/firebase";
+import { signUpWithCredentials } from "@/utils/firebase";
 
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { Toast } from "@/components/toast";
 import { SignInGoogle } from "@/components/sign-in-google";
 
-export default function Home() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailAlert, setEmailAlert] = useState(false);
@@ -51,7 +51,7 @@ export default function Home() {
 
     if (!isValidValues) return;
 
-    const result = await signInWithCredentials(email, password);
+    const result = await signUpWithCredentials(email, password);
 
     if (result === "success") {
       alert("sucesso");
@@ -68,8 +68,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-9 max-w-[340px] w-full mt-10 mb-5">
           <div className="flex flex-col items-center gap-2">
-            <h1 className="text-3xl text-white">Welcome</h1>
-            <p className="text-center text-[#A1A1A1]">Login to manage your account</p>
+            <h1 className="text-3xl text-white">Create Account</h1>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -87,7 +86,7 @@ export default function Home() {
 
           <div className="flex flex-col gap-4">
             <Button variant="primary" onClick={handleSignIn}>
-              Login
+              Sign Up
             </Button>
 
             <div className="flex items-center gap-6">
@@ -101,9 +100,9 @@ export default function Home() {
         </div>
 
         <span className="max-w-[420px] text-center text-[#A1A1A1] font-medium">
-          Don’t have an account?{" "}
-          <Link href={"/register"} className="text-[#005EF3] hover:underline">
-            Register
+          Already have an account?{" "}
+          <Link href={"/"} className="text-[#005EF3] hover:underline">
+            Sign In
           </Link>
         </span>
       </main>
