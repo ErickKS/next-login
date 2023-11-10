@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { Mail, LockKeyhole } from "lucide-react";
 
@@ -19,6 +20,8 @@ export default function Home() {
   const [passwordAlert, setPasswordAlert] = useState(false);
 
   const [toastActive, setToastActive] = useState(false);
+
+  const router = useRouter();
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target;
@@ -54,7 +57,7 @@ export default function Home() {
     const result = await signInWithCredentials(email, password);
 
     if (result === "success") {
-      alert("sucesso");
+      router.push("/congrats");
     } else {
       handleToast();
       return;
